@@ -27,21 +27,18 @@ var player = {
   fill: 'white',
   strokeColor: "black",
   strokeWidth: 1.5,
-  cy: 450,
-  cx: 250,
-  r: 10,
+  x: 450,
+  y: 250,
   angle: 0,
   path: 'M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z',
   makePlayer: function(){
     var playerD3 = gameBoardD3
       .append('svg:path')
-      // .attr('cx', this.cx)
-      // .attr('cy', this.cy)
       .attr('fill', this.fill)
       .attr('d', this.path)
       .attr('stroke', this.strokeColor)
       .attr('stroke-width', this.strokeWidth)
-      // .attr('r', this.r)
+      .attr('transform', 'translate(' + this.x.toString()+','+ this.y.toString()+')')
   }
 };
 

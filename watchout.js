@@ -24,17 +24,24 @@ var gameStats = {
 };
 
 var player = {
-  fill: 'blue',
-  shape: "square",
-  y: 450,
-  x: 250,
+  fill: 'white',
+  strokeColor: "black",
+  strokeWidth: 1.5,
+  cy: 450,
+  cx: 250,
+  r: 10,
   angle: 0,
+  path: 'M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z',
   makePlayer: function(){
     var playerD3 = gameBoardD3
-      .append('svg:square')
-      .attr('height', this.y)
-      .attr('width', this.x)
+      .append('svg:path')
+      // .attr('cx', this.cx)
+      // .attr('cy', this.cy)
       .attr('fill', this.fill)
+      .attr('d', this.path)
+      .attr('stroke', this.strokeColor)
+      .attr('stroke-width', this.strokeWidth)
+      // .attr('r', this.r)
   }
 };
 
@@ -66,8 +73,23 @@ var enemy = {
     for(var i = 1; i < this.amount; i++){
       this.makeEnemy();
     }
+  },
+  randomPosition : function(){
+    var result = [];
+    for(var i =0; i < this.amount;i++){
+      result.push([Math.random()*gameBoard.width, Math.random()*gameBoard.height])
+    }
+    return result;
+  },
+  move: function(){
+    gameBoardD3.selectAll('circle')
+      .data(this.randomPosition())
+      .transition().duration(500)
+      .attr('r', 10)
+      .attr('cx', function(x){return x[0]})
+      .attr('cy', function(y){return y[1]})
   }
-}
+};
 
 
 // make game board
@@ -78,12 +100,19 @@ var gameBoardD3 =
   .style('width', gameBoard.width+'px')
   .style('height', gameBoard.height+'px')
 
-// make player
-
-
-
-
+player.makePlayer()
 enemy.generate()
+setInterval(function(){
+  enemy.move()
+},1000);
+// var move = function(){
+//   d3.select('gameBoardD3').select("circle")
+//     .data([Math.random()*this.height])
+//     .transition().duration(1000)
+//     .attr("this.cy",  function(h){
+//       return h
+//     })
+// }
 
 
 

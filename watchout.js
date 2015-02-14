@@ -14,7 +14,7 @@ var gameBoard = {
   width: 900,
   nEnemies: 25,
   padding: 30,
-  color: 'green'
+  color: 'black'
 };
 
 var gameStats = {
@@ -25,12 +25,12 @@ var gameStats = {
 
 var player = {
   fill: 'white',
-  strokeColor: "black",
-  strokeWidth: 1.5,
+  strokeColor: "white",
+  strokeWidth: .4,
   x: 450,
   y: 250,
   angle: 0,
-  path: 'M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z',
+  path: 'M31.501,1.098c-0.782-1.125-2.375-1.416-4.249-0.716L2.583,9.46C1.2,9.97-0.182,10.647,0.02,11.809c0.209,1.154,1.744,1.311,3.215,1.311h11.256c2.42,0,4.388,1.968,4.388,4.386V28.76c0,0.966,0,3.231,1.517,3.236c0.841,0,1.458-0.749,2.133-2.586l9.086-24.669C32.307,2.854,31.94,1.717,31.501,1.098zM29.851,4.093L20.77,28.762c-0.009,0.016-0.009,0.026-0.018,0.04c0-0.014,0-0.029,0-0.042V17.505c0-3.455-2.805-6.265-6.262-6.265H3.235c-0.018,0-0.035,0-0.062,0c0.023-0.005,0.036-0.013,0.059-0.021l24.665-9.078c0.993-0.366,1.808-0.351,2.067,0.031C30.209,2.518,30.168,3.237,29.851,4.093z',
   makePlayer: function(){
     var playerD3 = gameBoardD3
       .append('svg:path')
@@ -43,7 +43,9 @@ var player = {
 };
 
 var enemy = {
-  fill: 'red',
+  fill: 'grey',
+  strokeColor: "white",
+  strokeWidth: 2,
   shape: 'circle',
   cy: function(){
     return Math.random()*gameBoard.height
@@ -52,8 +54,6 @@ var enemy = {
     return Math.random()*gameBoard.width
   },
   r: 10,
-  strokeColor: "black",
-  strokeWidth: 2,
   amount: 25,
   makeEnemy: function(){
     var enemyD3 = gameBoardD3
@@ -81,7 +81,7 @@ var enemy = {
   move: function(){
     gameBoardD3.selectAll('circle')
       .data(this.randomPosition())
-      .transition().duration(500)
+      .transition().duration(1500)
       .attr('r', 10)
       .attr('cx', function(x){return x[0]})
       .attr('cy', function(y){return y[1]})
@@ -101,7 +101,7 @@ player.makePlayer()
 enemy.generate()
 setInterval(function(){
   enemy.move()
-},1000);
+},2000);
 // var move = function(){
 //   d3.select('gameBoardD3').select("circle")
 //     .data([Math.random()*this.height])

@@ -148,7 +148,7 @@ var detectCollision = function(){
     if (collision){
       d3.select('.hero')
       .attr('fill', 'steelblue')
-      .attr('stroke', 'white')
+      .attr('stroke', 'steelblue')
     } else {
       d3.select('.hero')
       .attr('fill', player.fill)

@@ -47,6 +47,7 @@ var enemy = {
   strokeColor: "white",
   strokeWidth: 2,
   shape: 'circle',
+
   cy: function(){
     return Math.random()*gameBoard.height
   },
@@ -103,7 +104,6 @@ var drag = d3.behavior.drag()
     // console.log(player.x, player.y)
     player.x += d3.event.dx
     player.y += d3.event.dy
-    // might be a prob w collision
     d3.select(this).attr("transform", function(){
         return "translate(" + [ player.x,player.y ] + ")"
     })
@@ -138,10 +138,21 @@ var detectCollision = function(){
     // console.log("x-axis" + x)
     if (Math.sqrt(x*x + y*y) < 20){
       collision = true;
-    if (gameStats.currentScore > 0){
-      gameStats.collisions++;
-      gameStats.currentScore = 0;
+      // player.fill = "red";
+      if (gameStats.currentScore > 0){
+        gameStats.collisions++;
+        gameStats.currentScore = 0;
       }
+    }
+
+    if (collision){
+      d3.select('.hero')
+      .attr('fill', 'steelblue')
+      .attr('stroke', 'white')
+    } else {
+      d3.select('.hero')
+      .attr('fill', player.fill)
+      .attr('stroke', player.strokeColor)
     }
   });
 
@@ -152,13 +163,12 @@ var detectCollision = function(){
 d3.timer(detectCollision);
 
 
-
 setInterval(function(){
   //High Score
   if (gameStats.highScore < gameStats.currentScore){
     gameStats.highScore = gameStats.currentScore;
   }
-var highScoreD3 = d3.select(".high").select("span")
+  var highScoreD3 = d3.select(".high").select("span")
   .text(Math.max(gameStats.highScore, gameStats.currentScore))
 
   //Current Score
@@ -170,13 +180,3 @@ var highScoreD3 = d3.select(".high").select("span")
   .text(gameStats.collisions)
 
 }, 100)
-
-
-// setInterval(detectCollision, 10)
-
-
-
-// setInterval(function(){
-//     gameStats.currentScore++;
-//     return gameStats.currentScore;
-//   }, 100)

@@ -12,7 +12,6 @@
 var gameBoard = {
   height: 500,
   width: 900,
-  nEnemies: 25,
   padding: 30,
   color: 'black'
 };
@@ -55,7 +54,7 @@ var enemy = {
     return Math.random()*gameBoard.width
   },
   r: 10,
-  amount: 25,
+  amount: 20,
   makeEnemy: function(){
     var enemyD3 = gameBoardD3
       .append('svg:circle')
@@ -69,7 +68,7 @@ var enemy = {
   },
   // generate enemy based on enemy size property
   generate: function(){
-    for(var i = 1; i < this.amount; i++){
+    for(var i = 0; i < this.amount; i++){
       this.makeEnemy();
     }
   },
@@ -101,8 +100,7 @@ var gameBoardD3 =
 
 var drag = d3.behavior.drag()
   .on("drag", function(d,i) {
-    console.log("clicked")
-    console.log(player.x, player.y)
+    // console.log(player.x, player.y)
     player.x += d3.event.dx
     player.y += d3.event.dy
     // might be a prob w collision
@@ -120,20 +118,65 @@ setInterval(function(){
 d3.select(".hero")
   .call(drag);
 
-var data = d3.selectAll(".enemy")
-console.log(data);
+var allEnemies = d3.selectAll(".enemy");
+// var distanceData = [];
 
-var collision = function(){
-var distance = Math.sqrt(Math.pow(player.x-enemy.cx(), 2) + Math.pow(player.y-enemy.cy(), 2));
-  console.log('playerx: '+ player.x)
-  console.log('playery: '+ player.y)
-  console.log('enemycx: '+ enemy.cx())
-  console.log('enemycy: '+ enemy.cy())
+// // console.log(data);
+// for(var i = 0; i < dataSet[0].length; i++){
+//   distanceData.push(dataSet[0][i])
+// }
 
-  if(distance < 100){
-    console.log("HIT")
-  } else {
-    console.log("MISS")
+var detectCollision = function(){
+  var collision = false;
+  allEnemies.each(function(){
+    // var cx = this.offsetLeft + enemy.cx();
+    // var cy = this.offsetTop + enemy.cy();
+    // console.log(enemy.cx())
+    // console.log(allEnemies.attr('cx'));
+    var x = d3.select(this).attr('cx') - player.x;
+    var y = d3.select(this).attr('cy') - player.y;
+    // console.log("x-axis" + x)
+    if (Math.sqrt(x*x + y*y) < 20){
+      collision = true;
+    if (gameStats.currentScore > 0){
+      gameStats.collisions++;
+      gameStats.currentScore = 0;
+      }
+    }
+  });
+
+};
+
+
+
+d3.timer(detectCollision);
+
+
+
+setInterval(function(){
+  //High Score
+  if (gameStats.highScore < gameStats.currentScore){
+    gameStats.highScore = gameStats.currentScore;
   }
+var highScoreD3 = d3.select(".high").select("span")
+  .text(Math.max(gameStats.highScore, gameStats.currentScore))
 
-}
+  //Current Score
+  var currentScoreD3 = d3.select(".current").select("span")
+    .text(gameStats.currentScore++)
+
+  //Collisions
+  var collisionAmt = d3.select('.collisions').select("span")
+  .text(gameStats.collisions)
+
+}, 100)
+
+
+// setInterval(detectCollision, 10)
+
+
+
+// setInterval(function(){
+//     gameStats.currentScore++;
+//     return gameStats.currentScore;
+//   }, 100)
